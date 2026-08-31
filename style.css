@@ -11,9 +11,9 @@ body {
     font-family: Arial, sans-serif;
 }
 
-/* 数字表示（さらに大きく） */
+/* 数字表示（大きめ） */
 #number-display {
-    font-size: 13vw; /* 前回より約3pt相当大きく */
+    font-size: 13vw;
     text-align: center;
     margin-top: 8vh;
     letter-spacing: 0.6vw;
@@ -29,18 +29,19 @@ body {
     height: 1.5em;
 }
 
-/* 停止・終了ボタン（数字の2/3サイズ） */
+/* 停止・終了ボタン（少し小さく＆数字からさらに下げる） */
 #controls {
     width: 100%;
     display: flex;
     justify-content: space-around;
+    margin-top: 1.5em;  /* 数字からさらに2行分くらい下げるイメージ */
 }
 
 .main-btn {
-    width: 60vw;          /* 数字の2/3に相当する幅 */
-    max-width: 260px;
-    height: 60px;
-    font-size: 22px;
+    width: 40vw;          /* 前より小さく */
+    max-width: 200px;
+    height: 50px;
+    font-size: 20px;
     border-radius: 10px;
     border: none;
     background-color: #00aa00; /* 緑 */
@@ -56,6 +57,7 @@ body {
     width: 100%;
     display: flex;
     justify-content: space-around;
+    margin-top: 1em;
 }
 
 .time-btn {
@@ -71,3 +73,75 @@ body {
 .time-btn:active {
     background-color: #88ee55;
 }
+app.js（差し替え版）
+javascript
+let isRunning = true;
+let timer = null;
+
+// 初期表示時間（デフォルトは5秒）
+let currentDisplayTime = 5000;
+
+// ランダム桁数の数字を生成（1〜10桁）
+// ・先頭はゼロ禁止（1〜9）
+// ・3桁ごとにコンマ区切り
+function generateRandomNumber() {
+    const length = Math.floor(Math.random() * 10) + 1; // 1〜10桁
+
+    // 先頭は 1〜9
+    let num = String(Math.floor(Math.random() * 9) + 1);
+
+    // 2桁目以降は 0〜9
+    for (let i = 1; i < length; i++) {
+        num += Math.floor(Math.random() * 10);
+    }
+
+    // 3桁ごとにコンマ区切り
+    return num.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+// 数字を表示し続けるメイン処理
+function startSequence() {
+    const display = document.getElementById("number-display");
+
+    function showNext() {
+        if (!isRunning) return;
+
+        const num = generateRandomNumber();
+        display.textContent = num;
+
+        timer = setTimeout(showNext, currentDisplayTime);
+    }
+
+    showNext();
+}
+
+// 停止／再開ボタン
+document.getElementById("toggle-btn").addEventListener("click", () => {
+    const btn = document.getElementById("toggle-btn");
+
+    if (isRunning) {
+        isRunning = false;
+        clearTimeout(timer);
+        btn.textContent = "再開";
+    } else {
+        isRunning = true;
+        btn.textContent = "停止";
+        startSequence();
+    }
+});
+
+// 終了ボタン
+document.getElementById("end-btn").addEventListener("click", () => {
+    window.close();
+    location.href = "about:blank";
+});
+
+// 表示時間選択ボタン（5秒・7秒・9秒）
+document.querySelectorAll(".time-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+        currentDisplayTime = Number(btn.dataset.time);
+    });
+});
+
+// 初回起動
+startSequence();
