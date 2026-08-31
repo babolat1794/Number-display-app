@@ -4,16 +4,22 @@ let timer = null;
 // 初期表示時間（デフォルトは5秒）
 let currentDisplayTime = 5000;
 
-// ランダム桁数の数字を生成（1〜10桁）＋3桁ごとにコンマ区切り
+// ランダム桁数の数字を生成（1〜10桁）
+// ・先頭はゼロ禁止（1〜9）
+// ・3桁ごとにコンマ区切り
 function generateRandomNumber() {
     const length = Math.floor(Math.random() * 10) + 1; // 1〜10桁
-    let num = "";
-    for (let i = 0; i < length; i++) {
+
+    // 先頭は 1〜9
+    let num = String(Math.floor(Math.random() * 9) + 1);
+
+    // 2桁目以降は 0〜9
+    for (let i = 1; i < length; i++) {
         num += Math.floor(Math.random() * 10);
     }
 
-    // 数字を3桁ごとにコンマ区切り
-    return Number(num).toLocaleString("ja-JP");
+    // 3桁ごとにコンマ区切り
+    return num.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 // 数字を表示し続けるメイン処理
@@ -47,7 +53,7 @@ document.getElementById("toggle-btn").addEventListener("click", () => {
     }
 });
 
-// 終了ボタン（PWAではホーム画面に戻る動作）
+// 終了ボタン
 document.getElementById("end-btn").addEventListener("click", () => {
     window.close();
     location.href = "about:blank";
