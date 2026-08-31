@@ -8,22 +8,22 @@
 </head>
 <body>
 
-    <!-- 数字表示（前回より約3pt大きく） -->
+    <!-- 数字表示（前回よりさらに大きく） -->
     <div id="number-display"></div>
 
     <!-- 数字の下に3行分の余白 -->
-    <div style="height: 3em;"></div>
+    <div class="space-3lines"></div>
 
-    <!-- 停止・終了ボタン（数字の2/3サイズ） -->
+    <!-- 停止・終了ボタン（数字の2/3サイズ、背景：緑、文字：白） -->
     <div id="controls">
-        <button id="toggle-btn">停止</button>
-        <button id="end-btn">終了</button>
+        <button id="toggle-btn" class="main-btn">停止</button>
+        <button id="end-btn" class="main-btn">終了</button>
     </div>
 
     <!-- 1行分の余白 -->
-    <div style="height: 1.5em;"></div>
+    <div class="space-1line"></div>
 
-    <!-- 表示時間選択ボタン（黄緑） -->
+    <!-- 表示時間選択ボタン（背景：黄緑、文字：黒） -->
     <div id="time-select">
         <button class="time-btn" data-time="5000">5秒</button>
         <button class="time-btn" data-time="7000">7秒</button>
